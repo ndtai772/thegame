@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Main class. Entry point of the game.
@@ -40,11 +42,36 @@ public final class Main extends Application {
 		newGame.setOnMouseClicked(e -> newGame(primaryStage));
 		Button lastGame = new Button("Last Game");
 		lastGame.setOnAction(e -> reload(primaryStage));
-		VBox vBox = new VBox(gameTitle, newGame, lastGame);
+
+		Image imageSpeaker=new Image(Main.class.getResourceAsStream("/graphic/speaker.png"));
+		ImageView speaker=new ImageView(imageSpeaker);
+		speaker.setFitWidth(25);
+		speaker.setFitHeight(25);
+
+		var ref = new Object() {
+			boolean mute = false;
+		};
+		speaker.setOnMouseClicked(e -> {
+			if(!ref.mute) {
+				Image image = new Image(Main.class.getResourceAsStream("/graphic/mute2.png"));
+				speaker.setImage(image);
+				audioClip.stop();
+				ref.mute =true;
+			}
+			else {
+				Image image = new Image(Main.class.getResourceAsStream("/graphic/speaker.png"));
+				speaker.setImage(image);
+				audioClip.play();
+				ref.mute =false;
+			}
+		});
+
+
+		VBox vBox = new VBox(gameTitle, newGame, lastGame,speaker);
 		vBox.setSpacing(10);
 		vBox.setAlignment(Pos.CENTER);
-
 		pane.getChildren().add(vBox);
+
 		Scene scene = new Scene(pane);
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(true);
