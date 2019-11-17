@@ -6,6 +6,7 @@ import mrmathami.thegame.entity.LivingEntity;
 import mrmathami.thegame.entity.bullet.MachineGunBullet;
 import mrmathami.thegame.entity.bullet.NormalBullet;
 import mrmathami.thegame.entity.bullet.SniperBullet;
+import mrmathami.thegame.entity.bullet.TimerBullet;
 import mrmathami.thegame.entity.enemy.BossEnemy;
 import mrmathami.thegame.entity.enemy.NormalEnemy;
 import mrmathami.thegame.entity.enemy.SmallerEnemy;
@@ -45,15 +46,19 @@ public final class GameEntities {
 			Pair.immutableOf(NormalBullet.class, NormalEnemy.class),
 			Pair.immutableOf(MachineGunBullet.class, NormalEnemy.class),
 			Pair.immutableOf(SniperBullet.class, NormalEnemy.class),
+			Pair.immutableOf(TimerBullet.class, NormalEnemy.class),
 			Pair.immutableOf(NormalBullet.class, SmallerEnemy.class),
 			Pair.immutableOf(MachineGunBullet.class, SmallerEnemy.class),
 			Pair.immutableOf(SniperBullet.class, SmallerEnemy.class),
+			Pair.immutableOf(TimerBullet.class, SmallerEnemy.class),
 			Pair.immutableOf(NormalBullet.class, TankerEnemy.class),
 			Pair.immutableOf(MachineGunBullet.class, TankerEnemy.class),
 			Pair.immutableOf(SniperBullet.class, TankerEnemy.class),
+			Pair.immutableOf(TimerBullet.class, TankerEnemy.class),
 			Pair.immutableOf(NormalBullet.class, BossEnemy.class),
 			Pair.immutableOf(MachineGunBullet.class, BossEnemy.class),
 			Pair.immutableOf(SniperBullet.class, BossEnemy.class),
+			Pair.immutableOf(TimerBullet.class, BossEnemy.class),
 			Pair.immutableOf(NormalEnemy.class, Target.class),
 			Pair.immutableOf(SmallerEnemy.class, Target.class),
 			Pair.immutableOf(TankerEnemy.class, Target.class),

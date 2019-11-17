@@ -14,6 +14,7 @@ public class LoadedImage {
 	public static final Image NORMAL_TOWER = load("/graphic/normalTower.png");
 	public static final Image MACHINE_GUN_TOWER = load("/graphic/machineGunTower.png");
 	public static final Image SNIPER_TOWER = load("/graphic/sniperTower.png");
+	public static final Image TIMER_TOWER = load("/graphic/Timer.png");
 	static final Image $$$ = load("/graphic/$.png");
 	public static final Image NORMAL_ENEMY = load("/graphic/normalEnemy.png");
 	public static final Image SMALLER_ENEMY = load("/graphic/smallerEnemy.png");

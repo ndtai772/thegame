@@ -21,6 +21,8 @@ import mrmathami.thegame.entity.tile.tower.AbstractTower;
 import mrmathami.thegame.entity.tile.tower.MachineGunTower;
 import mrmathami.thegame.entity.tile.tower.NormalTower;
 import mrmathami.thegame.entity.tile.tower.SniperTower;
+import mrmathami.thegame.entity.tile.tower.TimerTower;
+
 import mrmathami.utilities.ThreadFactoryBuilder;
 
 import java.io.FileOutputStream;
@@ -152,7 +154,7 @@ public final class GameController extends AnimationTimer {
 
 //		// if it's too late to draw a new frame, skip it.
 //		// make the game feel really laggy, so...
-		if (currentTick != tick) return;
+//		if (currentTick != tick) return;
 
         // draw a new frame, as fast as possible.
         drawer.render();
@@ -165,7 +167,7 @@ public final class GameController extends AnimationTimer {
 //        graphicsContext.fillText(String.format("MSPT: %3.2f", mspt), 0, 12);
         credit.setText(String.valueOf(field.credit));
 
-        if (Config.autoPlay && tick % (Config.GAME_TPS * 2) == 0) autoPlay();
+        if (Config.autoPlay && (tick % Config.GAME_TPS *2)==0) autoPlay();
         // if we have time to spend, do a spin
         while (currentTick == tick) Thread.onSpinWait();
     }
@@ -189,7 +191,10 @@ public final class GameController extends AnimationTimer {
      * @param windowEvent currently not used
      */
     final void closeRequestHandler(WindowEvent windowEvent) {
-        if (status != Config.GAME_STATUS.WIN && status != Config.GAME_STATUS.LOSE) save();
+        if (status != Config.GAME_STATUS.WIN && status != Config.GAME_STATUS.LOSE) {
+            save();
+        }
+        scheduledFuture.cancel(true);
         stop();
         Platform.exit();
         System.exit(0);
@@ -238,9 +243,10 @@ public final class GameController extends AnimationTimer {
             var towers = GameEntities.entitiesFilter(entities, AbstractTower.class);
             for (AbstractTower tower : towers) {
                 switch (tower.getClass().getSimpleName()) {
-                    case "NormalTower":     field.credit += 0.8 * Config.NORMAL_TOWER_PRICE;        break;
-                    case "SniperTower":     field.credit += 0.8 * Config.SNIPER_TOWER_PRICE;        break;
-                    case "MachineGunTower": field.credit += 0.8 * Config.MACHINE_GUN_TOWER_PRICE;   break;
+                    case "NormalTower":     field.credit += 0.8*Config.NORMAL_TOWER_PRICE;      break;
+                    case "SniperTower":     field.credit += 0.8*Config.SNIPER_TOWER_PRICE;      break;
+                    case "MachineGunTower": field.credit += 0.8*Config.MACHINE_GUN_TOWER_PRICE; break;
+                    case "TimerTower":      field.credit += 0.8*Config.TIMER_TOWER_PRICE;       break;
                 }
                 field.destroy(tower);
             }
@@ -262,6 +268,11 @@ public final class GameController extends AnimationTimer {
                     if (field.credit < Config.SNIPER_TOWER_PRICE) return;
                     field.doSpawn(new SniperTower(tick, x, y));
                     field.credit -= Config.SNIPER_TOWER_PRICE;
+                    break;
+                case TIMER_TOWER:
+                    if (field.credit < Config.TIMER_TOWER_PRICE) return;
+                    field.doSpawn(new TimerTower(tick, x, y));
+                    field.credit -= Config.TIMER_TOWER_PRICE;
                     break;
             }
         }
@@ -319,6 +330,11 @@ public final class GameController extends AnimationTimer {
                 field.doSpawn(new MachineGunTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
                 field.credit -= Config.MACHINE_GUN_TOWER_PRICE;
                 return;
+            case 3:
+                if (field.credit < Config.TIMER_TOWER_PRICE) return;
+                field.doSpawn(new TimerTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
+                field.credit -= Config.MACHINE_GUN_TOWER_PRICE;
+                break;
         }
         autoPlay();
     }
@@ -334,7 +350,7 @@ public final class GameController extends AnimationTimer {
             double r2 = range * range;
             if (d2 > r2) continue;
             if (e instanceof Road) valid -= (2 * r2 / d2);
-            else valid += (r2 / d2);
+            else valid += (r2 / d2);            
         }
         return valid < 0;
     }

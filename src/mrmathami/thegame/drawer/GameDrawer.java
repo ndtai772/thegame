@@ -10,6 +10,7 @@ import mrmathami.thegame.entity.GameEntity;
 import mrmathami.thegame.entity.bullet.MachineGunBullet;
 import mrmathami.thegame.entity.bullet.NormalBullet;
 import mrmathami.thegame.entity.bullet.SniperBullet;
+import mrmathami.thegame.entity.bullet.TimerBullet;
 import mrmathami.thegame.entity.enemy.BossEnemy;
 import mrmathami.thegame.entity.enemy.NormalEnemy;
 import mrmathami.thegame.entity.enemy.SmallerEnemy;
@@ -22,6 +23,7 @@ import mrmathami.thegame.entity.tile.spawner.TankerSpawner;
 import mrmathami.thegame.entity.tile.tower.MachineGunTower;
 import mrmathami.thegame.entity.tile.tower.NormalTower;
 import mrmathami.thegame.entity.tile.tower.SniperTower;
+import mrmathami.thegame.entity.tile.tower.TimerTower;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,9 +44,11 @@ public final class GameDrawer {
 			NormalTower.class,
 			SniperTower.class,
 			MachineGunTower.class,
+			TimerTower.class,
 			NormalBullet.class,
 			MachineGunBullet.class,
 			SniperBullet.class,
+			TimerBullet.class,
 			NormalEnemy.class,
 			SmallerEnemy.class,
 			TankerEnemy.class,
@@ -67,9 +71,13 @@ public final class GameDrawer {
 			Map.entry(NormalTower.class, new NormalTowerDrawer()),
 			Map.entry(SniperTower.class, new SniperTowerDrawer()),
 			Map.entry(MachineGunTower.class, new MachineGunTowerDrawer()),
+			Map.entry(TimerTower.class, new TimerTowerDrawer()),
+
 			Map.entry(NormalBullet.class, new NormalBulletDrawer()),
 			Map.entry(MachineGunBullet.class, new MachineGunBulletDrawer()),
 			Map.entry(SniperBullet.class, new SniperBulletDrawer()),
+			Map.entry(TimerBullet.class, new TimerBulletDrawer()),
+
 			Map.entry(NormalEnemy.class, new NormalEnemyDrawer()),
 			Map.entry(SmallerEnemy.class, new SmallerEnemyDrawer()),
 			Map.entry(TankerEnemy.class, new TankerEnemyDrawer()),

@@ -104,6 +104,12 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 		if (health != Long.MIN_VALUE && (value < -armor || value > 0)) this.health += value;
 	}
 
+	public final void doTimerEffect(double value){
+		if(speed >= Config.TANKER_ENEMY_SPEED) {
+            if (reward != 2) speed *= value;
+            else speed = 0.15;
+        }
+	}
 	@Override
 	public final void doDestroy() {
 		this.health = Long.MIN_VALUE;

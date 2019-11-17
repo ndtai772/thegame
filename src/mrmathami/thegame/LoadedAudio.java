@@ -35,6 +35,10 @@ public class LoadedAudio {
         else return load("/audio/enemyDestroy.mp3", 0.4, 0.7);
     }
 
+    public static AudioClip timer() {
+        return load("/audio/normalTower.mp3" , 0.02, 1);
+    }
+
     static AudioClip BACKGROUND_MUSIC = backgroundMusic();
     private static AudioClip backgroundMusic() {
         AudioClip audioClip = load("/audio/swordland.mp3", 0.03, 1);
