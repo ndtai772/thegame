@@ -25,6 +25,10 @@ public class LoadedAudio {
         return load("/audio/normalTower.mp3" , 0.04, 1);
     }
 
+    public static AudioClip timer() {
+        return load("/audio/normalTower.mp3" , 0.02, 1);
+    }
+
     public static AudioClip enemyDestroy() {
         return load("/audio/enemyDestroy.mp3", 0.04, 1);
     }

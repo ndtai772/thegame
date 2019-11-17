@@ -28,7 +28,7 @@ public abstract class AbstractBullet extends AbstractEntity implements Updatable
 	}
 
 	@Override
-	public final boolean onEffect(@Nonnull GameField field, @Nonnull LivingEntity livingEntity) {
+	public boolean onEffect(@Nonnull GameField field, @Nonnull LivingEntity livingEntity) {
 		livingEntity.doEffect(-strength);
 		this.tickDown = 0;
 		return false;

@@ -1,5 +1,7 @@
 package mrmathami.thegame;
 
+import javafx.scene.text.Font;
+
 public final class Config {
 	/**
 	 * Game name. Change it if you want.
@@ -61,6 +63,10 @@ public final class Config {
 	public static final long SNIPER_BULLET_TTL = 10;
 	public static final long SNIPER_BULLET_STRENGTH = 40;
 	public static final double SNIPER_BULLET_SPEED = 0.9;
+
+	public static final long TIMER_BULLET_TTL = 60;
+	public static final long TIMER_BULLET_STRENGTH = 10;
+	public static final double TIMER_BULLET_SPEED = 0.6;
 	//endregion
 
 	//region Tower
@@ -72,6 +78,9 @@ public final class Config {
 
 	public static final long SNIPER_TOWER_SPEED = 60;
 	public static final double SNIPER_TOWER_RANGE = 7.0;
+
+	public static final long TIMER_TOWER_SPEED = 50;
+	public static final double TIMER_TOWER_RANGE = 7.0;
 	//endregion
 
 	//region Enemy
@@ -112,6 +121,7 @@ public final class Config {
 	static final long NORMAL_TOWER_PRICE = 10;
 	static final long MACHINE_GUN_TOWER_PRICE = 20;
 	static final long SNIPER_TOWER_PRICE = 15;
+	static final long TIMER_TOWER_PRICE = 20;
 	static final String logPath = "res/log";
 	public static boolean sfx = true;
 	static boolean music = true;

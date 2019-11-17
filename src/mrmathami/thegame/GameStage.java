@@ -12,6 +12,7 @@ import mrmathami.thegame.entity.tile.spawner.TankerSpawner;
 import mrmathami.thegame.entity.tile.tower.MachineGunTower;
 import mrmathami.thegame.entity.tile.tower.NormalTower;
 import mrmathami.thegame.entity.tile.tower.SniperTower;
+import mrmathami.thegame.entity.tile.tower.TimerTower;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -111,6 +112,10 @@ public final class GameStage {
 						final int x = scanner.nextInt();
 						final int y = scanner.nextInt();
 						entities.add(new SniperTower(0, x, y));
+					} else if ("TimerTower".equals(value)) {
+							final int x = scanner.nextInt();
+							final int y = scanner.nextInt();
+							entities.add(new TimerTower(0, x, y));
 					} else if ("Target".equals(value)) {
 						final int x = scanner.nextInt();
 						final int y = scanner.nextInt();
