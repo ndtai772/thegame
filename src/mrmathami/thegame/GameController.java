@@ -2,17 +2,22 @@ package mrmathami.thegame;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 import mrmathami.thegame.drawer.GameDrawer;
 import mrmathami.thegame.entity.GameEntity;
 import mrmathami.thegame.entity.enemy.AbstractEnemy;
+import mrmathami.thegame.entity.tile.AbstractTile;
 import mrmathami.thegame.entity.tile.Mountain;
+import mrmathami.thegame.entity.tile.Road;
 import mrmathami.thegame.entity.tile.Target;
 import mrmathami.thegame.entity.tile.spawner.AbstractSpawner;
+import mrmathami.thegame.entity.tile.tower.AbstractTower;
 import mrmathami.thegame.entity.tile.tower.MachineGunTower;
 import mrmathami.thegame.entity.tile.tower.NormalTower;
 import mrmathami.thegame.entity.tile.tower.SniperTower;
@@ -94,7 +99,8 @@ public final class GameController extends AnimationTimer {
 		// Can be modified to support zoom in / zoom out of the map.
 		drawer.setFieldViewRegion(0.0, 0.0, Config.TILE_SIZE);
 		credit = new Text(String.valueOf(field.credit));
-		credit.setFont(Config.TEXT_FONT);
+		credit.setFont(Font.font(20));
+        credit.setFill(Color.YELLOW);
 	}
 
 	GameController(GraphicsContext graphicsContext, GameField other) {
@@ -103,7 +109,8 @@ public final class GameController extends AnimationTimer {
 		this.drawer = new GameDrawer(graphicsContext, field);
 		drawer.setFieldViewRegion(0.0, 0.0, Config.TILE_SIZE);
 		credit = new Text(String.valueOf(field.credit));
-		credit.setFont(Config.TEXT_FONT);
+        credit.setFont(Font.font(20));
+        credit.setFill(Color.YELLOW);
 	}
 
 	/**
@@ -114,158 +121,221 @@ public final class GameController extends AnimationTimer {
 		this.tick += 1;
 	}
 
-	/**
-	 * A JavaFX loop.
-	 * Kinda advance, modify if you are sure about your change.
-	 *
-	 * @param now not used. It is a timestamp in nanosecond.
-	 */
-	@Override
-	public void handle(long now) {
-		if (status == Config.GAME_STATUS.PAUSE)
-			return;
-		// don't touch me.
-		final long currentTick = tick;
-		final long startNs = System.nanoTime();
+    /**
+     * A JavaFX loop.
+     * Kinda advance, modify if you are sure about your change.
+     *
+     * @param now not used. It is a timestamp in nanosecond.
+     */
+    @Override
+    public void handle(long now) {
+        switch (getStatus()) {
+            case NONE: break;
+            case PAUSE: return;
+            case WIN:
+                graphicsContext.drawImage(LoadedImage.WIN, Config.SCREEN_WIDTH / 6, Config.SCREEN_HEIGHT / 6 , Config.SCREEN_WIDTH * 2 / 3, Config.SCREEN_HEIGHT * 2 / 3);
+                if (Config.sfx) LoadedAudio.WIN.play();
+                stop();
+                return;
+            case LOSE:
+                graphicsContext.drawImage(LoadedImage.LOSE, 0, 0, Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
+                if (Config.sfx) LoadedAudio.LOSE.play();
+                stop();
+                return;
+        }
+        // don't touch me.
+        final long currentTick = tick;
+//        final long startNs = System.nanoTime();
 
-		// do a tick, as fast as possible
-		field.tick();
+        // do a tick, as fast as possible
+        field.tick();
 
 //		// if it's too late to draw a new frame, skip it.
 //		// make the game feel really laggy, so...
-//		if (currentTick != tick) return;
+		if (currentTick != tick) return;
 
-		// draw a new frame, as fast as possible.
-		drawer.render();
+        // draw a new frame, as fast as possible.
+        drawer.render();
 
-		// MSPT display. MSPT stand for Milliseconds Per Tick.
-		// It means how many ms your game spend to update and then draw the game once.
-		// Draw it out mostly for debug
-		final double mspt = (System.nanoTime() - startNs) / 1000000.0;
-		graphicsContext.setFill(Color.BLACK);
-		graphicsContext.fillText(String.format("MSPT: %3.2f", mspt), 0, 12);
-		credit.setText(String.valueOf(field.credit));
+//        // MSPT display. MSPT stand for Milliseconds Per Tick.
+//        // It means how many ms your game spend to update and then draw the game once.
+//        // Draw it out mostly for debug
+//        final double mspt = (System.nanoTime() - startNs) / 1000000.0;
+//        graphicsContext.setFill(Color.BLACK);
+//        graphicsContext.fillText(String.format("MSPT: %3.2f", mspt), 0, 12);
+        credit.setText(String.valueOf(field.credit));
 
-		// if we have time to spend, do a spin
-		while (currentTick == tick) Thread.onSpinWait();
-	}
+        if (Config.autoPlay && tick % (Config.GAME_TPS * 2) == 0) autoPlay();
+        // if we have time to spend, do a spin
+        while (currentTick == tick) Thread.onSpinWait();
+    }
 
-	/**
-	 * Start rendering and ticking. Just don't touch me.
-	 * Anything that need to initialize should be in the constructor.
-	 */
-	@Override
-	public void start() {
-		// Start the beat-keeper. Start to call this::tick at a fixed rate.
-		this.scheduledFuture = SCHEDULER.scheduleAtFixedRate(this::tick, 0, Config.GAME_NSPT, TimeUnit.NANOSECONDS);
-		// start the JavaFX loop.
-		super.start();
-	}
+    /**
+     * Start rendering and ticking. Just don't touch me.
+     * Anything that need to initialize should be in the constructor.
+     */
+    @Override
+    public void start() {
+        // Start the beat-keeper. Start to call this::tick at a fixed rate.
+        this.scheduledFuture = SCHEDULER.scheduleAtFixedRate(this::tick, 0, Config.GAME_NSPT, TimeUnit.NANOSECONDS);
+        // start the JavaFX loop.
+        super.start();
+    }
 
-	/**
-	 * On window close request.
-	 * Kinda advance, modify if you are sure about your change.
-	 *
-	 * @param windowEvent currently not used
-	 */
-	final void closeRequestHandler(WindowEvent windowEvent) {
-		if (status != Config.GAME_STATUS.WIN && status != Config.GAME_STATUS.LOSE) {
-			status = Config.GAME_STATUS.PAUSE;
-		}
-		System.out.println("Here");
-		save();
-		scheduledFuture.cancel(true);
-		stop();
-		Platform.exit();
-		System.exit(0);
-	}
+    /**
+     * On window close request.
+     * Kinda advance, modify if you are sure about your change.
+     *
+     * @param windowEvent currently not used
+     */
+    final void closeRequestHandler(WindowEvent windowEvent) {
+        if (status != Config.GAME_STATUS.WIN && status != Config.GAME_STATUS.LOSE) save();
+        stop();
+        Platform.exit();
+        System.exit(0);
+    }
 
-	private void save() {
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream(Config.logPath);
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(field);
-			objectOutputStream.close();
-			System.out.println("Saved!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void stop() {
+        scheduledFuture.cancel(true);
+        super.stop();
+    }
 
-	private Text credit;
-	Text getCredit() {
-		return credit;
-	}
-	private Config.KEY_STATUS keyStatus = Config.KEY_STATUS.NONE;
+    private void save() {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(Config.logPath);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(field);
+            objectOutputStream.close();
+        } catch (Exception ignore) {}
+    }
 
-	void setKeyStatus(Config.KEY_STATUS keyStatus) {
-		this.keyStatus = keyStatus;
-	}
-	void mouseClickHandler(MouseEvent event) {
-		int x = (int) drawer.fieldToScreenPosX(event.getX());
-		int y = (int) drawer.screenToFieldPosY(event.getY());
-		var entities = GameEntities.getOverlappedEntities(field.getEntities(), x, y, 1, 1);
-		switch (keyStatus) {
-			case NORMAL_TOWER:
-				if (field.credit < Config.NORMAL_TOWER_PRICE) return;
-				for (GameEntity entity : entities) {
-					if (!entity.getClass().equals(Mountain.class)) return;
-				}
-				field.doSpawn(new NormalTower(tick, x, y));
-				field.credit -= Config.NORMAL_TOWER_PRICE;
-				break;
-			case MACHINE_GUN_TOWER:
-				if (field.credit < Config.MACHINE_GUN_TOWER_PRICE) return;
-				for (GameEntity entity : entities) {
-					if (!entity.getClass().equals(Mountain.class)) return;
-				}
-				field.doSpawn(new MachineGunTower(tick, x, y));
-				field.credit -= Config.MACHINE_GUN_TOWER_PRICE;
-				break;
-			case SNIPER_TOWER:
-				if (field.credit < Config.SNIPER_TOWER_PRICE) return;
-				for (GameEntity entity : entities) {
-					if (!entity.getClass().equals(Mountain.class)) return;
-				}
-				field.doSpawn(new SniperTower(tick, x, y));
-				field.credit -= Config.SNIPER_TOWER_PRICE;
-				break;
-			case SELL:
-				for (GameEntity entity : entities) {
-					switch (entity.getClass().getSimpleName()) {
-						case "NormalTower" :
-							field.credit += Config.NORMAL_TOWER_PRICE;
-							field.destroy(entity);
-							break;
-						case "SniperTower" :
-							field.credit += Config.SNIPER_TOWER_PRICE;
-							field.destroy(entity);
-							break;
-						case "MachineGunTower" :
-							field.credit += Config.MACHINE_GUN_TOWER_PRICE;
-							field.destroy(entity);
-							break;
-						default: break;
-					}
-				}
-				break;
-			case NONE: break;
-		}
-	}
-	private Config.GAME_STATUS status = Config.GAME_STATUS.NONE;
-	private Config.GAME_STATUS getStatus(){
-		var targets = GameEntities.entitiesFilter(field.getEntities(), Target.class);
-		if (targets.isEmpty()) return Config.GAME_STATUS.LOSE;
-		var spawns = GameEntities.entitiesFilter(field.getEntities(), AbstractSpawner.class);
-		for (AbstractSpawner spawn : spawns) {
-			if (spawn.getNumOfSpawn() > 0) return status;
-		}
-		var enemies = GameEntities.entitiesFilter(field.getEntities(), AbstractEnemy.class);
-		if (enemies.isEmpty()) return Config.GAME_STATUS.WIN;
-		return status;
-	}
+    private Text credit;
 
-	void setStatus(Config.GAME_STATUS status) {
-		this.status = status;
-	}
+    Text getCredit() {
+        return credit;
+    }
+
+    private Config.KEY_STATUS keyStatus = Config.KEY_STATUS.NONE;
+
+    void setKey(Config.KEY_STATUS keyStatus, Cursor cursor) {
+        this.keyStatus = keyStatus;
+        graphicsContext.getCanvas().getParent().setCursor(cursor);
+    }
+
+    void mouseClickHandler(MouseEvent event) {
+        int x = (int) drawer.screenToFieldPosX(event.getX());
+        int y = (int) drawer.screenToFieldPosY(event.getY());
+        if (keyStatus == Config.KEY_STATUS.NONE) return;
+        var entities = GameEntities.getOverlappedEntities(field.getEntities(), x, y, 1, 1);
+        for (GameEntity entity : entities)
+            if (entity.getClass().equals(Road.class)) {
+                setKey(Config.KEY_STATUS.NONE, Cursor.DEFAULT);
+                return;
+            }
+        if (status != Config.GAME_STATUS.NONE) return;
+        if (keyStatus == Config.KEY_STATUS.SELL) {
+            var towers = GameEntities.entitiesFilter(entities, AbstractTower.class);
+            for (AbstractTower tower : towers) {
+                switch (tower.getClass().getSimpleName()) {
+                    case "NormalTower":     field.credit += 0.8 * Config.NORMAL_TOWER_PRICE;        break;
+                    case "SniperTower":     field.credit += 0.8 * Config.SNIPER_TOWER_PRICE;        break;
+                    case "MachineGunTower": field.credit += 0.8 * Config.MACHINE_GUN_TOWER_PRICE;   break;
+                }
+                field.destroy(tower);
+            }
+        } else {
+            for (GameEntity entity : entities)
+                if (!entity.getClass().equals(Mountain.class)) return;
+            switch (keyStatus) {
+                case NORMAL_TOWER:
+                    if (field.credit < Config.NORMAL_TOWER_PRICE) return;
+                    field.doSpawn(new NormalTower(tick, x, y));
+                    field.credit -= Config.NORMAL_TOWER_PRICE;
+                    break;
+                case MACHINE_GUN_TOWER:
+                    if (field.credit < Config.MACHINE_GUN_TOWER_PRICE) return;
+                    field.doSpawn(new MachineGunTower(tick, x, y));
+                    field.credit -= Config.MACHINE_GUN_TOWER_PRICE;
+                    break;
+                case SNIPER_TOWER:
+                    if (field.credit < Config.SNIPER_TOWER_PRICE) return;
+                    field.doSpawn(new SniperTower(tick, x, y));
+                    field.credit -= Config.SNIPER_TOWER_PRICE;
+                    break;
+            }
+        }
+    }
+
+    private Config.GAME_STATUS status = Config.GAME_STATUS.NONE;
+
+    Config.GAME_STATUS getStatus() {
+        var targets = GameEntities.entitiesFilter(field.getEntities(), Target.class);
+        if (targets.isEmpty()) status = Config.GAME_STATUS.LOSE;
+        else {
+            var spawns = GameEntities.entitiesFilter(field.getEntities(), AbstractSpawner.class);
+            for (AbstractSpawner spawn : spawns) {
+                if (spawn.getNumOfSpawn() > 0) return status;
+            }
+            var enemies = GameEntities.entitiesFilter(field.getEntities(), AbstractEnemy.class);
+            if (enemies.isEmpty()) status = Config.GAME_STATUS.WIN;
+        }
+        return status;
+    }
+
+    void setStatus(Config.GAME_STATUS status) {
+        this.status = status;
+    }
+
+    private void autoPlay() {
+        if (field.credit < Config.NORMAL_TOWER_PRICE) return;
+        var mountains = GameEntities.entitiesFilter(field.getEntities(), Mountain.class);
+        int k = (int) (mountains.size() * Math.random());
+        Mountain randomMountain = null;
+        for (Mountain m : mountains)
+            if (--k < 0){
+                var entities = GameEntities.getOverlappedEntities(field.getEntities(), m.getPosX(), m.getPosY(), 1, 1);
+                if (entities.size() > 1) return;
+                randomMountain = m;
+                break;
+            }
+        if (randomMountain == null) return;
+        switch ((int) (Math.random() * 3)) {
+            case 0:
+                if (field.credit < Config.NORMAL_TOWER_PRICE) return;
+                if (!towerCheck(randomMountain, Config.NORMAL_TOWER_RANGE)) break;
+                field.doSpawn(new NormalTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
+                field.credit -= Config.NORMAL_TOWER_PRICE;
+                return;
+            case 1:
+                if (field.credit < Config.SNIPER_TOWER_PRICE) return;
+                if (!towerCheck(randomMountain, Config.SNIPER_TOWER_RANGE)) break;
+                field.doSpawn(new SniperTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
+                field.credit -= Config.SNIPER_TOWER_PRICE;
+                return;
+            case 2:
+                if (field.credit < Config.MACHINE_GUN_TOWER_PRICE) return;
+                if (!towerCheck(randomMountain, Config.MACHINE_GUN_TOWER_RANGE)) break;
+                field.doSpawn(new MachineGunTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
+                field.credit -= Config.MACHINE_GUN_TOWER_PRICE;
+                return;
+        }
+        autoPlay();
+    }
+    private boolean towerCheck(GameEntity entity, double range) {
+        double x = GameEntities.getMidX(entity);
+        double y = GameEntities.getMidY(entity);
+        double valid = 0;
+        for (var e : GameEntities.entitiesFilter(field.getEntities(), AbstractTile.class)) {
+            if (e == entity) continue;
+            double dx = GameEntities.getMidX(e) - x;
+            double dy = GameEntities.getMidY(e) - y;
+            double d2 = dx * dx + dy * dy;
+            double r2 = range * range;
+            if (d2 > r2) continue;
+            if (e instanceof Road) valid -= (2 * r2 / d2);
+            else valid += (r2 / d2);
+        }
+        return valid < 0;
+    }
 }

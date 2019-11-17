@@ -1,16 +1,18 @@
 package mrmathami.thegame.entity.enemy;
 
-import javafx.scene.image.Image;
+import mrmathami.thegame.Config;
 import mrmathami.thegame.GameEntities;
 import mrmathami.thegame.GameField;
+import mrmathami.thegame.LoadedAudio;
 import mrmathami.thegame.entity.*;
+import mrmathami.thegame.entity.Explosion;
 import mrmathami.thegame.entity.tile.Road;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
 public abstract class AbstractEnemy extends AbstractEntity implements UpdatableEntity, EffectEntity, LivingEntity, DestroyListener {
-	private static final double SQRT_2 = Math.sqrt(2.0) / 2.0;
+	private static final double SQRT_2 = Math.sqrt(2) / 2.0;
 	private static final double[][] DELTA_DIRECTION_ARRAY = {
 			{0.0, -1.0}, {0.0, 1.0}, {-1.0, 0.0}, {1.0, 0.0},
 			{-SQRT_2, -SQRT_2}, {SQRT_2, SQRT_2}, {SQRT_2, -SQRT_2}, {-SQRT_2, SQRT_2},
@@ -20,7 +22,6 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 	private long armor;
 	private double speed;
 	private long reward;
-	protected Image image;
 
 	protected AbstractEnemy(long createdTick, double posX, double posY, double size, long health, long armor, double speed, long reward) {
 		super(createdTick, posX, posY, size, size);
@@ -64,7 +65,7 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 				final double currentPosX = enemyPosX + deltaDirection[0] * realSpeed;
 				final double currentPosY = enemyPosY + deltaDirection[1] * realSpeed;
 				final double currentDistance = evaluateDistance(overlappableEntities, this, currentPosX, currentPosY, enemyWidth, enemyHeight);
-				if (currentDistance < minimumDistance) {
+				if (currentDistance < minimumDistance || (currentDistance == minimumDistance && Math.random() > 0.8)) {
 					minimumDistance = currentDistance;
 					newPosX = currentPosX;
 					newPosY = currentPosY;
@@ -79,6 +80,8 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 	public final void onDestroy(@Nonnull GameField field) {
 		// TODO: reward ... Done!
 		field.credit += reward;
+		if (Config.sfx) LoadedAudio.enemyDestroy(this.getClass()).play();
+		field.doSpawn(new Explosion(0, this));
 	}
 
 	@Override
@@ -86,6 +89,8 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 		// TODO: harm the target ... Done!
 		livingEntity.doEffect(-health);
 		this.health = Long.MIN_VALUE;
+		if (livingEntity instanceof  AbstractEntity)
+			field.doSpawn(new Explosion(0, (AbstractEntity) livingEntity));
 		return false;
 	}
 
@@ -109,7 +114,4 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 		return health <= 0L;
 	}
 
-	public double getSpeed() {
-		return speed;
-	}
 }

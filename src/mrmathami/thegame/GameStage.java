@@ -4,6 +4,7 @@ import mrmathami.thegame.entity.GameEntity;
 import mrmathami.thegame.entity.tile.Mountain;
 import mrmathami.thegame.entity.tile.Road;
 import mrmathami.thegame.entity.tile.Target;
+import mrmathami.thegame.entity.tile.Obstacle;
 import mrmathami.thegame.entity.tile.spawner.BossSpawner;
 import mrmathami.thegame.entity.tile.spawner.NormalSpawner;
 import mrmathami.thegame.entity.tile.spawner.SmallerSpawner;
@@ -42,14 +43,19 @@ public final class GameStage {
 				final List<GameEntity> entities = new ArrayList<>(width * height + numOfTiles);
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
-						final int value = scanner.nextInt();
-						if (value == 0) {
-							entities.add(new Road(0, x, y));
-						} else if (value == 1) {
-							entities.add(new Mountain(0, x, y));
-						} else {
-							throw new InputMismatchException("Unexpected value! Input value: " + value);
-						}
+//						final int value = scanner.nextInt();
+//						if (value == 0) {
+//							entities.add(new Road(0, x, y));
+//						} else if (value == 1) {
+//							entities.add(new Mountain(0, x, y));
+//						} else {
+//							throw new InputMismatchException("Unexpected value! Input value: " + value);
+//						}
+						String s = scanner.next();
+						if (s.equals("1"))
+							if (Math.random() > 0.2) entities.add(new Mountain(0, x, y, (int) (Math.random() * 4)));
+							else entities.add(new Obstacle(0, x, y, (int) (Math.random() * 3)));
+						else entities.add(new Road(0, x, y, s));
 					}
 				}
 				// path finding
