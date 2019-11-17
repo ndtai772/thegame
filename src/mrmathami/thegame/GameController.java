@@ -12,6 +12,7 @@ import javafx.stage.WindowEvent;
 import mrmathami.thegame.drawer.GameDrawer;
 import mrmathami.thegame.entity.GameEntity;
 import mrmathami.thegame.entity.enemy.AbstractEnemy;
+import mrmathami.thegame.entity.tile.AbstractTile;
 import mrmathami.thegame.entity.tile.Mountain;
 import mrmathami.thegame.entity.tile.Road;
 import mrmathami.thegame.entity.tile.Target;
@@ -287,6 +288,7 @@ public final class GameController extends AnimationTimer {
     }
 
     private void autoPlay() {
+        if (field.credit < Config.NORMAL_TOWER_PRICE) return;
         var mountains = GameEntities.entitiesFilter(field.getEntities(), Mountain.class);
         int k = (int) (mountains.size() * Math.random());
         Mountain randomMountain = null;
@@ -301,19 +303,39 @@ public final class GameController extends AnimationTimer {
         switch ((int) (Math.random() * 3)) {
             case 0:
                 if (field.credit < Config.NORMAL_TOWER_PRICE) return;
+                if (!towerCheck(randomMountain, Config.NORMAL_TOWER_RANGE)) break;
                 field.doSpawn(new NormalTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
                 field.credit -= Config.NORMAL_TOWER_PRICE;
-                break;
+                return;
             case 1:
                 if (field.credit < Config.SNIPER_TOWER_PRICE) return;
+                if (!towerCheck(randomMountain, Config.SNIPER_TOWER_RANGE)) break;
                 field.doSpawn(new SniperTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
                 field.credit -= Config.SNIPER_TOWER_PRICE;
-                break;
+                return;
             case 2:
                 if (field.credit < Config.MACHINE_GUN_TOWER_PRICE) return;
+                if (!towerCheck(randomMountain, Config.MACHINE_GUN_TOWER_RANGE)) break;
                 field.doSpawn(new MachineGunTower(tick, (long) randomMountain.getPosX(), (long) randomMountain.getPosY()));
                 field.credit -= Config.MACHINE_GUN_TOWER_PRICE;
-                break;
+                return;
         }
+        autoPlay();
+    }
+    private boolean towerCheck(GameEntity entity, double range) {
+        double x = GameEntities.getMidX(entity);
+        double y = GameEntities.getMidY(entity);
+        double valid = 0;
+        for (var e : GameEntities.entitiesFilter(field.getEntities(), AbstractTile.class)) {
+            if (e == entity) continue;
+            double dx = GameEntities.getMidX(e) - x;
+            double dy = GameEntities.getMidY(e) - y;
+            double d2 = dx * dx + dy * dy;
+            double r2 = range * range;
+            if (d2 > r2) continue;
+            if (e instanceof Road) valid -= (2 * r2 / d2);
+            else valid += (r2 / d2);
+        }
+        return valid < 0;
     }
 }

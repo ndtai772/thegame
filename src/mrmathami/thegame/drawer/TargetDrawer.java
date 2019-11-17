@@ -17,12 +17,12 @@ public final class TargetDrawer implements EntityDrawer {
 		graphicsContext.drawImage(LoadedImage.TARGET, screenPosX, screenPosY, screenWidth, screenHeight);
 		if (entity instanceof Target) {
 			Target target = ((Target) entity);
-			graphicsContext.setFill(Color.BLUE);
-			double blue = target.getHealth() * screenWidth /target.MAX_HP / 2;
-			graphicsContext.fillRect(screenPosX + screenWidth / 4, screenPosY + screenHeight / 2, blue, 3);
+			graphicsContext.setFill(Color.GRAY);
+			graphicsContext.fillRoundRect(screenPosX + screenWidth * 0.3, screenPosY + 52, screenWidth * 0.4, 10, 10, 5);
+			graphicsContext.setFill(Color.DARKRED);
+			double blue = target.getHealth() * screenWidth /target.MAX_HP * 0.4;
+			graphicsContext.fillRoundRect(screenPosX + screenWidth * 0.3, screenPosY + 52, blue, 10, 10, 5);
 			double red = screenWidth / 2 - blue;
-			graphicsContext.setFill(Color.RED);
-			graphicsContext.fillRect(screenPosX + screenWidth / 4 + blue, screenPosY + screenHeight / 2, red, 3);
 		}
 	}
 }

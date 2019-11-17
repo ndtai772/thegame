@@ -11,6 +11,7 @@ import mrmathami.thegame.entity.enemy.NormalEnemy;
 import mrmathami.thegame.entity.enemy.SmallerEnemy;
 import mrmathami.thegame.entity.enemy.TankerEnemy;
 import mrmathami.thegame.entity.tile.Mountain;
+import mrmathami.thegame.entity.tile.Obstacle;
 import mrmathami.thegame.entity.tile.Target;
 import mrmathami.utilities.Pair;
 import mrmathami.utilities.UnorderedPair;
@@ -32,7 +33,11 @@ public final class GameEntities {
 			UnorderedPair.immutableOf(NormalEnemy.class, NormalEnemy.class),
 			UnorderedPair.immutableOf(SmallerEnemy.class, SmallerEnemy.class),
 			UnorderedPair.immutableOf(TankerEnemy.class, TankerEnemy.class),
-			UnorderedPair.immutableOf(BossEnemy.class, BossEnemy.class)
+			UnorderedPair.immutableOf(BossEnemy.class, BossEnemy.class),
+			UnorderedPair.immutableOf(Obstacle.class, NormalEnemy.class),
+			UnorderedPair.immutableOf(Obstacle.class, SmallerEnemy.class),
+			UnorderedPair.immutableOf(Obstacle.class, TankerEnemy.class),
+			UnorderedPair.immutableOf(Obstacle.class, BossEnemy.class)
 	));
 
 	private static final Set<Pair<Class<? extends EffectEntity>, Class<? extends LivingEntity>>> EFFECT_LIVING_SET

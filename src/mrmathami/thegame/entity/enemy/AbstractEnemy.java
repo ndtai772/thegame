@@ -65,7 +65,7 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 				final double currentPosX = enemyPosX + deltaDirection[0] * realSpeed;
 				final double currentPosY = enemyPosY + deltaDirection[1] * realSpeed;
 				final double currentDistance = evaluateDistance(overlappableEntities, this, currentPosX, currentPosY, enemyWidth, enemyHeight);
-				if (currentDistance < minimumDistance) {
+				if (currentDistance < minimumDistance || (currentDistance == minimumDistance && Math.random() > 0.8)) {
 					minimumDistance = currentDistance;
 					newPosX = currentPosX;
 					newPosY = currentPosY;
@@ -80,7 +80,7 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 	public final void onDestroy(@Nonnull GameField field) {
 		// TODO: reward ... Done!
 		field.credit += reward;
-		if (Config.sfx) LoadedAudio.enemyDestroy().play();
+		if (Config.sfx) LoadedAudio.enemyDestroy(this.getClass()).play();
 		field.doSpawn(new Explosion(0, this));
 	}
 
