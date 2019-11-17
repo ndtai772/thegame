@@ -4,6 +4,7 @@ import mrmathami.thegame.Config;
 import mrmathami.thegame.GameField;
 import mrmathami.thegame.entity.LivingEntity;
 import mrmathami.thegame.entity.enemy.AbstractEnemy;
+import mrmathami.thegame.entity.enemy.SmallerEnemy;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +18,7 @@ public final class TimerBullet extends AbstractBullet {
         super.onEffect(field, livingEntity);
         if(livingEntity instanceof AbstractEnemy) {
             AbstractEnemy enemy = (AbstractEnemy) livingEntity;
-            enemy.doTimerEffect(2);
+            enemy.doTimerEffect(0.6);
         }
         return false ;
     }

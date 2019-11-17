@@ -86,10 +86,12 @@ public final class Main extends Application {
 		var normalTowerLine = towerLine(LoadedImage.NORMAL_TOWER, Config.KEY_STATUS.NORMAL_TOWER, Config.NORMAL_TOWER_PRICE, gameController);
 		var sniperTowerLine = towerLine(LoadedImage.SNIPER_TOWER, Config.KEY_STATUS.SNIPER_TOWER, Config.SNIPER_TOWER_PRICE, gameController);
 		var machineGunTowerLine = towerLine(LoadedImage.MACHINE_GUN_TOWER, Config.KEY_STATUS.MACHINE_GUN_TOWER, Config.MACHINE_GUN_TOWER_PRICE, gameController);
+		var timerTowerLine = towerLine(LoadedImage.TIMER_TOWER, Config.KEY_STATUS.TIMER_TOWER, Config.TIMER_TOWER_PRICE, gameController);
+
 		var sell = LoadedImage.imageView(LoadedImage.SELL, 40, 30, true);
 		sell.setOnMouseClicked(e -> gameController.setKey(Config.KEY_STATUS.SELL, new ImageCursor(LoadedImage.$$$)));
 		ImageView shopTitle = LoadedImage.imageView(LoadedImage.SHOP, 50, 15, false);
-		VBox shop = new VBox(moneyLine, shopTitle,normalTowerLine, sniperTowerLine, machineGunTowerLine, sell);
+		VBox shop = new VBox(moneyLine, shopTitle,normalTowerLine, sniperTowerLine, machineGunTowerLine, timerTowerLine,sell);
 		shop.setAlignment(Pos.TOP_CENTER);
 		shop.setSpacing(3);
 
