@@ -1,7 +1,5 @@
 package mrmathami.thegame;
 
-import javafx.scene.text.Font;
-
 public final class Config {
 	/**
 	 * Game name. Change it if you want.
@@ -21,7 +19,7 @@ public final class Config {
 	 * 1.0 field unit == TILE_SIZE pixel on the screen.
 	 * Change it base on your texture size.
 	 */
-	public static final long TILE_SIZE = 32;
+	public static final long TILE_SIZE = 35;
 	/**
 	 * Num of tiles the screen can display if fieldZoom is TILE_SIZE,
 	 * in other words, the texture will be display as it without scaling.
@@ -90,19 +88,19 @@ public final class Config {
 	public static final double NORMAL_ENEMY_SPEED = 0.1;
 	public static final long NORMAL_ENEMY_REWARD = 2;
 
-	public static final double SMALLER_ENEMY_SIZE = 0.8;
+	public static final double SMALLER_ENEMY_SIZE = 0.9;
 	public static final long SMALLER_ENEMY_HEALTH = 50;
 	public static final long SMALLER_ENEMY_ARMOR = 0;
-	public static final double SMALLER_ENEMY_SPEED = 0.21;
+	public static final double SMALLER_ENEMY_SPEED = 0.2;
 	public static final long SMALLER_ENEMY_REWARD = 2;
 
-	public static final double TANKER_ENEMY_SIZE = 1.5;
+	public static final double TANKER_ENEMY_SIZE = 1.2;
 	public static final long TANKER_ENEMY_HEALTH = 300;
 	public static final long TANKER_ENEMY_ARMOR = 5;
 	public static final double TANKER_ENEMY_SPEED = 0.07;
 	public static final long TANKER_ENEMY_REWARD = 4;
 
-	public static final double BOSS_ENEMY_SIZE = 1.3;
+	public static final double BOSS_ENEMY_SIZE = 1.4;
 	public static final long BOSS_ENEMY_HEALTH = 500;
 	public static final long BOSS_ENEMY_ARMOR = 8;
 	public static final double BOSS_ENEMY_SPEED = 0.1;
