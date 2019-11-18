@@ -25,7 +25,6 @@ public abstract class AbstractTower<E extends AbstractBullet> extends AbstractTi
 
 	@Override
 	public final void onUpdate(@Nonnull GameField field) {
-		this.tickDown -= 1;
 		if (tickDown <= 0) {
 			// TODO: Find a target and spawn a bullet to that direction ... done!
 			// Use GameEntities.getFilteredOverlappedEntities to find target in range
@@ -43,7 +42,7 @@ public abstract class AbstractTower<E extends AbstractBullet> extends AbstractTi
 					break;
 				}
 			}
-		}
+		} else this.tickDown -= 1;
 	}
 
 	/**
@@ -63,5 +62,9 @@ public abstract class AbstractTower<E extends AbstractBullet> extends AbstractTi
 
 	public double getRotation() {
 		return Math.toDegrees(rotation);
+	}
+
+	public double getTickDown() {
+		return tickDown;
 	}
 }

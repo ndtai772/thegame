@@ -6,12 +6,9 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,10 +28,6 @@ public final class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		StackPane pane = new StackPane();
-		pane.setPrefWidth(Config.SCREEN_WIDTH + 100);
-		pane.setPrefHeight(Config.SCREEN_HEIGHT);
-		pane.setBackground(LoadedImage.BACKGROUND);
 
 		LoadedAudio.BACKGROUND_MUSIC.play();
 		ImageView gameTitle = LoadedImage.imageView(LoadedImage.GAME_TITLE, 800, 150, false);
@@ -74,7 +67,6 @@ public final class Main extends Application {
 	}
 
 	private void renderGameUI(Stage stage, GameField field) {
-		StackPane pane = new StackPane();
 		Canvas canvas = new Canvas(Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
 		canvas.setFocusTraversable(true);
 		GraphicsContext graphicsContext = canvas.getGraphicsContext2D();

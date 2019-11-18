@@ -1,6 +1,7 @@
 package mrmathami.thegame.drawer;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Glow;
 import mrmathami.thegame.Config;
 import mrmathami.thegame.LoadedImage;
 import mrmathami.thegame.entity.GameEntity;
@@ -18,6 +19,7 @@ public final class SniperTowerDrawer implements EntityDrawer {
 			graphicsContext.save();
 			graphicsContext.translate((tower.getPosX() + tower.getWidth() / 2) * Config.TILE_SIZE, (tower.getPosY() + tower.getHeight() / 2) * Config.TILE_SIZE);
 			graphicsContext.rotate(tower.getRotation());
+			graphicsContext.setEffect(new Glow(tower.getTickDown() / Config.SNIPER_TOWER_SPEED));
 			graphicsContext.drawImage(LoadedImage.SNIPER_TOWER, -screenWidth / 2, -screenHeight / 2, screenWidth, screenHeight);
 			graphicsContext.restore();
 		}
