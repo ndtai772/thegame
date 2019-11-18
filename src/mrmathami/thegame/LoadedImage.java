@@ -1,11 +1,9 @@
 package mrmathami.thegame;
 
-import javafx.geometry.Insets;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 public class LoadedImage {
 	private static Image load(String path) {
@@ -22,11 +20,10 @@ public class LoadedImage {
 	public static final Image BOSS_ENEMY = load("/graphic/bossEnemy.png");
 	static final Image WIN = load("/graphic/winMes.png");
 	static final Image LOSE = load("/graphic/bglose.jpg");
-	//public static final Image BACKGROUND = load("/graphic/bg.jfif");
-	private static BackgroundImage loadBGI(String path) {
-		return new BackgroundImage(load(path), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+	private static BackgroundImage loadBGI() {
+		return new BackgroundImage(load("/graphic/bg.jfif"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 	}
-	static final Background BACKGROUND = new Background(loadBGI("/graphic/bg.jfif"));
+	static final Background BACKGROUND = new Background(loadBGI());
 	public static final Image TARGET = load("/graphic/target.png");
 
 //	public static final Image ROAD = load("/graphic/road.png");
@@ -61,8 +58,6 @@ public class LoadedImage {
 		return imageView;
 	}
 
-	static final Background focusBackground = new Background( new BackgroundFill( Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY ) );
-	static final Background unFocusBackground = new Background( new BackgroundFill( Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY ) );
 	public static final Image[] OBSTACLES = {
 			load("/graphic/tree.png"),
 			load("/graphic/tree_2.png"),

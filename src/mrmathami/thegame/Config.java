@@ -4,7 +4,7 @@ public final class Config {
 	/**
 	 * Game name. Change it if you want.
 	 */
-	public static final String GAME_NAME = "TOWER DEFENSE";
+	static final String GAME_NAME = "TOWER DEFENSE";
 	/**
 	 * Ticks per second
 	 */
@@ -12,7 +12,7 @@ public final class Config {
 	/**
 	 * Nanoseconds per tick
 	 */
-	public static final long GAME_NSPT = Math.round(1000000000.0 / GAME_TPS);
+	static final long GAME_NSPT = Math.round(1000000000.0 / GAME_TPS);
 
 	/**
 	 * Size of the tile, in pixel.
@@ -24,17 +24,17 @@ public final class Config {
 	 * Num of tiles the screen can display if fieldZoom is TILE_SIZE,
 	 * in other words, the texture will be display as it without scaling.
 	 */
-	public static final long TILE_HORIZONTAL = 30;
+	private static final long TILE_HORIZONTAL = 30;
 	/**
 	 * Num of tiles the screen can display if fieldZoom is TILE_SIZE,
 	 * in other words, the texture will be display as it without scaling.
 	 */
-	public static final long TILE_VERTICAL = 17;
+	private static final long TILE_VERTICAL = 17;
 	/**
 	 * An arbitrary number just to make some code run a little faster.
 	 * Do not touch.
 	 */
-	public static final int _TILE_MAP_COUNT = (int) (TILE_HORIZONTAL * TILE_VERTICAL);
+	static final int _TILE_MAP_COUNT = (int) (TILE_HORIZONTAL * TILE_VERTICAL);
 
 
 	/**
@@ -82,7 +82,7 @@ public final class Config {
 	//endregion
 
 	//region Enemy
-	public static final double NORMAL_ENEMY_SIZE = 1.2;
+	public static final double NORMAL_ENEMY_SIZE = 1;
 	public static final long NORMAL_ENEMY_HEALTH = 100;
 	public static final long NORMAL_ENEMY_ARMOR = 3;
 	public static final double NORMAL_ENEMY_SPEED = 0.1;
@@ -100,14 +100,14 @@ public final class Config {
 	public static final double TANKER_ENEMY_SPEED = 0.07;
 	public static final long TANKER_ENEMY_REWARD = 4;
 
-	public static final double BOSS_ENEMY_SIZE = 1.4;
+	public static final double BOSS_ENEMY_SIZE = 1.5;
 	public static final long BOSS_ENEMY_HEALTH = 500;
 	public static final long BOSS_ENEMY_ARMOR = 8;
 	public static final double BOSS_ENEMY_SPEED = 0.1;
 	public static final long BOSS_ENEMY_REWARD = 10;
 	//endregion
 
-	static final long START_CREDIT = 150;
+	static final long START_CREDIT = 100;
 
 	enum KEY_STATUS {
 		NONE, NORMAL_TOWER, SNIPER_TOWER, MACHINE_GUN_TOWER, TIMER_TOWER, SELL

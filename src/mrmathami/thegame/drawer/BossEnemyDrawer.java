@@ -1,6 +1,7 @@
 package mrmathami.thegame.drawer;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
 import mrmathami.thegame.Config;
 import mrmathami.thegame.LoadedImage;
@@ -27,7 +28,9 @@ public final class BossEnemyDrawer implements EntityDrawer {
 			graphicsContext.fillRect(screenPosX + screenWidth / 6, screenPosY - 10, blue, 3);
 			graphicsContext.setFill(Color.RED);
 			graphicsContext.fillRect(screenPosX + screenWidth / 6 + blue, screenPosY - 10, red, 3);
+			if (((BossEnemy) entity).badEffect) graphicsContext.setEffect(new ColorAdjust(0.4 * Math.random(), 0,0, 0));
 		}
 		graphicsContext.drawImage(LoadedImage.BOSS_ENEMY, screenPosX, screenPosY, screenWidth, screenHeight);
+		graphicsContext.setEffect(null);
 	}
 }

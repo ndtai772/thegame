@@ -22,6 +22,7 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 	private long armor;
 	private double speed;
 	private long reward;
+	public boolean badEffect = false;
 
 	protected AbstractEnemy(long createdTick, double posX, double posY, double size, long health, long armor, double speed, long reward) {
 		super(createdTick, posX, posY, size, size);
@@ -74,6 +75,7 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 		}
 		setPosX(newPosX);
 		setPosY(newPosY);
+		if (badEffect && field.getTickCount() % Config.GAME_TPS == 0) health -= Math.round(0.1 * health);
 	}
 
 	@Override
@@ -104,11 +106,9 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 		if (health != Long.MIN_VALUE && (value < -armor || value > 0)) this.health += value;
 	}
 
-	public final void doTimerEffect(double value){
-		if(speed >= Config.TANKER_ENEMY_SPEED) {
-            if (reward != 2) speed *= value;
-            else speed = 0.15;
-        }
+	public final void doTimerEffect(){
+		speed = Math.max(speed * 0.8, 1 - getWidth());
+		badEffect = true;
 	}
 	@Override
 	public final void doDestroy() {
