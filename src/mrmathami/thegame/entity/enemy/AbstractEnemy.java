@@ -106,8 +106,8 @@ public abstract class AbstractEnemy extends AbstractEntity implements UpdatableE
 
 	public final void doTimerEffect(double value){
 		if(speed >= Config.TANKER_ENEMY_SPEED) {
-            if (reward != 2) speed *= value;
-            else speed = 0.15;
+            if (reward != 3) speed *= value;
+            else speed = 0.12;
         }
 	}
 	@Override
